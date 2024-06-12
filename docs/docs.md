@@ -165,6 +165,7 @@ productId: `ObjectId`, required
 quantity: `Number`, required, default=1
 date: `Date`, required, default=Date.now(), index
 price: `Number`, required
+userID: `ObjectId`, required
 ```
 
 Dokładniejszy opis można znaleźć [tutaj](./backend/models/salesHistorySchema.md).
@@ -198,7 +199,7 @@ Zwraca koszyk klienta.
 ```js
 {
   success: true,
-  cartData: CartItemSchema[]
+  cartData: CartItemSchema[],
   totalPrice: number
 }
 ```
@@ -425,6 +426,7 @@ Przed wykonaniem sprawdzamy przy pomocy middlewaru validateBodyJsonSchema czy da
 ```js
 {
   success: true,
+  message: string,
   product: {
     _id: ObjectId,
     name: string,
@@ -977,8 +979,6 @@ Middleware który sprawdza czy request.body posiada daną strukturę.
 }
 ```
 
-~
-
 ## Frontend
 
 Przy pomocy biblioteki React stworzyliśmy dwie strony internetowe- jedną dla uzytkownika, która pobiera dane z endpointów i umożliwia:
@@ -992,42 +992,42 @@ Przy pomocy biblioteki React stworzyliśmy dwie strony internetowe- jedną dla 
 - dodawanie oraz usuwanie produktów
 - sprawdzanie historii produktu
 
-## Sklep internetowy- zdjęcia
+### Sklep internetowy- zdjęcia
 
-### Strona wyboru produktu
+#### Strona wyboru produktu
 
 ![](./images/products.png)
 
-### Strona wyboru produktu (po zalogowaniu)
+#### Strona wyboru produktu (po zalogowaniu)
 
 ![](./images/productsLogged.png)
 
-### Szczegółowy widok produktu
+#### Szczegółowy widok produktu
 
 ![](./images/detailedProductView.png)
 
-### Panel logowania
+#### Panel logowania
 
 ![](./images/logging.png)
 
-### Koszyk
+#### Koszyk
 
 ![](./images/cart.png)
 
-### Koszyk (pusty)
+#### Koszyk (pusty)
 
 ![](./images/cartEmpty.png)
 
-## Panel administratora- zdjęcia
+### Panel administratora - zdjęcia
 
-### Panel administratora (listowanie produktów)
+#### Panel administratora (listowanie produktów)
 
 ![](./images/adminList.png)
 
-### Dodawanie produktu
+#### Dodawanie produktu
 
 ![](./images/addProduct.png)
 
-### Lista użytkowników
+#### Lista użytkowników
 
 ![](./images/users.png)
