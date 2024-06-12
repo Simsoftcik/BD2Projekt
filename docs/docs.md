@@ -124,6 +124,8 @@ imageUrl: `String`, required
 available: `Boolean`, default=true
 ```
 
+Dokładniejszy opis można znaleźć [tutaj](./backend/models/productSchema.md).
+
 ### UserSchema (kolekcja users)
 
 ```js
@@ -154,6 +156,8 @@ password: `String`, required
   totalPrice: `Number`
 ```
 
+Dokładniejszy opis można znaleźć [tutaj](./backend/models/userSchema.md).
+
 ### SalesHistorySchema (kolekcja salesHistory)
 
 ```js
@@ -162,6 +166,8 @@ quantity: `Number`, required, default=1
 date: `Date`, required, default=Date.now(), index
 price: `Number`, required
 ```
+
+Dokładniejszy opis można znaleźć [tutaj](./backend/models/salesHistorySchema.md).
 
 ### Walidacja
 
@@ -185,6 +191,7 @@ Zwraca koszyk klienta.
 ##### Parametry
 
 - \_id `ObjectId`
+- _optional_ projection `Projection`
 
 ##### Wartość zwracana
 
@@ -192,8 +199,14 @@ Zwraca koszyk klienta.
 {
   success: true,
   cartData: CartItemSchema[]
+  totalPrice: number
 }
 ```
+
+---
+
+Wartość zwracana jest zależna od projection.
+Powyżej znajdują się dane otrzymane gdy projection nie zostanie podane.
 
 ##### Zwracanie błędu
 
@@ -223,7 +236,7 @@ Zmienia dane jednego produktu w koszyku użytkownika.
 ```js
 {
   success: true,
-  message: 'Cart updated',
+  message: string,
   newCart: {
     type: [CartItemSchema],
     default: []
@@ -266,7 +279,7 @@ Aby zachować synchroniczność dostępu do danych używamy mutexa weryfikacyjne
 ```js
 {
   success: true,
-  message: 'Products sold',
+  message: string,
   totalPrice: number
 }
 ```
@@ -308,7 +321,7 @@ Zwraca wszystkie produkty.
 ```js
 {
   success: true,
-  cartData: CartItemSchema[]
+  products: CartItemSchema[]
 }
 ```
 
@@ -339,7 +352,7 @@ Zwraca wszystkie dostępne produkty.
 ```js
 {
   success: true,
-  cartData: CartItemSchema[]
+  products: CartItemSchema[]
 }
 ```
 
@@ -375,7 +388,7 @@ Przed wykonaniem sprawdzamy przy pomocy middlewaru validateBodyJsonSchema czy da
 ```js
 {
   success: true,
-  message: 'Product saved',
+  message: string,
   name: string
 }
 ```
@@ -539,7 +552,7 @@ Dodaje nowego użytkownika.
 ```js
 {
   success: true,
-  message: 'User has been created',
+  message: string,
   user: {
     _id: ObjectId,
     customerData: {
@@ -665,6 +678,76 @@ Loguje użytkownika.
 }
 ```
 
+### Endpointy historii sprzedaży
+
+#### /salesHistory/get/:id
+
+##### Opis
+
+Zwraca historię sprzedaży konkretnego produktu.
+
+##### Metoda HTTP `GET`
+
+##### Parametry
+
+- _optional_ salesProjection `Projection`
+- _optional_ salesFilter `Filter`
+- _optional_ productProjection `Projection`
+
+##### Wartość zwracana
+
+```js
+{
+  success: true,
+  message: string,
+  products: CartItemSchema,
+  salesHistory: SalesHistorySchema[]
+}
+```
+
+---
+
+Wartość zwracana jest zależna od projection.
+Powyżej znajdują się dane otrzymane gdy projection nie zostanie podane.
+
+##### Zwracanie błędu
+
+```js
+{
+  success: false,
+  message: string,
+  errors: string
+}
+```
+
+#### /totalEarned/:id
+
+##### Opis
+
+Zwraca łączną zarobioną kwotę przez konkretny produkt.
+
+##### Metoda HTTP `GET`
+
+##### Wartość zwracana
+
+```js
+{
+  success: true,
+  message: string,
+  totalEarned: number
+}
+```
+
+##### Zwracanie błędu
+
+```js
+{
+  success: false,
+  message: string,
+  errors: string
+}
+```
+
 ## Metody pomocnicze
 
 #### addNewUser
@@ -682,7 +765,7 @@ Dodaje użytkownika do bazy.
 ```js
 {
   success: true,
-  message: 'User has been created',
+  message: string,
   user: {
     _id: ObjectId,
     customerData: {
@@ -893,22 +976,25 @@ Middleware który sprawdza czy request.body posiada daną strukturę.
   errors: string
 }
 ```
+
 ~
+
 ## Frontend
 
 Przy pomocy biblioteki React stworzyliśmy dwie strony internetowe- jedną dla uzytkownika, która pobiera dane z endpointów i umożliwia:
+
 - rejestrację i logowanie się
 - przeglądanie produktów
 - dodawanie i usuwanie produktów z koszyka (po zalogowaniu)
 - symboliczny zakup produktów z koszyka
-Oraz drugą dla administratora, za pomocą której mozna:
+  Oraz drugą dla administratora, za pomocą której mozna:
 - sprawdzać bazę użytkowników
 - dodawanie oraz usuwanie produktów
 - sprawdzanie historii produktu
 
 ## Sklep internetowy- zdjęcia
 
-### Strona wyboru produktu 
+### Strona wyboru produktu
 
 ![](./images/products.png)
 
@@ -939,6 +1025,7 @@ Oraz drugą dla administratora, za pomocą której mozna:
 ![](./images/adminList.png)
 
 ### Dodawanie produktu
+
 ![](./images/addProduct.png)
 
 ### Lista użytkowników
